@@ -2,6 +2,8 @@
 
 This is a dated report, not a live monitoring service. Three distinct artifacts are kept separate:
 
+**Public Linux CI passed:** [GitHub Actions run 44822567620](https://github.com/Acadia2049/slickdeals-analytics-demo/actions/runs/44822567620), testing source commit `a88a3bf`. A fresh Ubuntu runner installed the combined requirements, built and tested the synthetic analytics, passed dashboard regression checks, and executed the report CLI successfully.
+
 | Artifact | Version / scope | Evidence checked |
 |---|---|---|
 | Production collection | Two-hour MWAA Serverless schedule, ECS collector/verifier | Latest 50 executions: 50 SUCCESS. Last checked execution finished Nov 20, 15:34:04 NY. |
