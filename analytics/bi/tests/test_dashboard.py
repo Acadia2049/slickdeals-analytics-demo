@@ -49,20 +49,22 @@ class Dashboard(unittest.TestCase):
         chart=app.get("arrow_vega_lite_chart")[0].proto.datasets[0]
         series=pa.ipc.open_stream(chart.data.data).read_all().to_pylist()
         expected=self.sql("snapshot_share",self.dates,self.amazon)
-        self.assertEqual([(r["run_key"],r["snapshot_share"],r["full_snapshot_deals"]) for r in series],
-                         [(r["run_key"],r["snapshot_share"],r["full_snapshot_deals"]) for r in expected])
+        self.assertEqual([(r["snapshot_timestamp"].replace(tzinfo=None),r["snapshot_share"],r["full_snapshot_deals"]) for r in series],
+                         [(r["snapshot_timestamp"],r["snapshot_share"],r["full_snapshot_deals"]) for r in expected])
         mix=self.sql("promotion_mix",self.dates,self.amazon)
         bars=[m.value for m in app.markdown if 'class="mix">' in m.value]
         self.assertEqual(len(bars),len(mix))
+        labels={"fixed":"Fixed price","starting_at":"Starting at","upper_bound":"Up to",
+                "percentage":"Percentage offer","free":"Free","other":"Other offers"}
         for row in mix:
-            self.assertTrue(any(f'>{row["first_price_type"].replace("_"," ")}</span>' in b and f'>{row["deals"]}</b>' in b for b in bars))
+            self.assertTrue(any(f'>{labels[row["first_price_type"]]}</span>' in b and f'>{row["deals"]}</b>' in b for b in bars))
         rates=app.dataframe[0].value
         for i,k in enumerate(("vote","comment")):
             rate=self.sql(k+"_velocity",self.dates,self.amazon)[0]
             self.assertEqual(rates.iloc[i]["Rate / hour"],f'{rate[k+"_velocity_per_hour"]:.6f}')
-            self.assertEqual(rates.iloc[i]["Deals with rate"],rate["deals_with_"+k+"_rate"])
+            self.assertEqual(rates.iloc[i]["Deals measured"],rate["deals_with_"+k+"_rate"])
         app.selectbox(key="offer").set_value("other").run()
-        self.assertEqual(self.cards(app),cards[:3]+["NULL"])
+        self.assertEqual(self.cards(app),cards[:3]+["—"])
         self.assertTrue(rates.equals(app.dataframe[0].value))
         expected_mix=self.sql("promotion_mix",self.dates,self.amazon,offer_types=["other"])
         self.assertEqual(len([m for m in app.markdown if 'class="mix">' in m.value]),len(expected_mix))
@@ -76,8 +78,8 @@ class Dashboard(unittest.TestCase):
         self.assertEqual(self.cards(app)[0],f'{self.sql("merchant_overview",self.dates,key)[0]["mean_snapshot_share"]:.2%}')
         app.radio(key="date_mode").set_value("Fixed dates").run()
         app.date_input(key="fixed_dates").set_value((date(2025,1,1),)*2).run()
-        self.assertEqual(self.cards(app),["NULL"]*4)
-        self.assertTrue(all(app.dataframe[0].value["Rate / hour"]=="NULL"))
+        self.assertEqual(self.cards(app),["—"]*4)
+        self.assertTrue(all(app.dataframe[0].value["Rate / hour"]=="—"))
 
     def test_observation_audit(self):
         expected=self.sql("deal_observation_audit",self.dates,self.amazon)

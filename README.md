@@ -4,9 +4,9 @@
 
 I built a pipeline that collects timestamped Slickdeals Frontpage observations, verifies the saved source evidence, and exposes carefully defined metrics through a read-only dashboard. The engineering focus is data quality, explicit measurement rules, and tracing a result back to its inputs.
 
-![Merchant Overview with actual r4 data](docs/application/assets/merchant-overview-r4.jpg)
+![Merchant Overview with observed data](docs/application/assets/merchant-overview.jpg)
 
-*Actual dashboard release r4; Amazon, November 10–16, 2026 (New York dates). Screenshot captured November 20. The public runnable demo uses separate, explicitly synthetic data.*
+*Observed data: Amazon, November 10–16, 2026 (New York dates). Screenshot captured November 20. The public runnable demo uses separate, explicitly synthetic data.*
 
 This public repository contains the reproducible analytics and dashboard portion of my larger Slickdeals platform. Production collection, infrastructure history and operational data remain in a separate private repository.
 
@@ -49,22 +49,17 @@ The demo creates fictional observations locally, runs the actual nine-model dbt 
 
 ## A result you can inspect
 
-Amazon's mean per-Deal comment velocity for November 10–16 is **0.205042 comments per eligible observation hour** in r4. It uses 674 Deals and 6,659 measured intervals, including 14 negative counter changes. The metric first computes each Deal's signed rate, then gives each Deal equal weight. It is not total comment change divided by total hours.
+Amazon's mean per-Deal comment velocity for November 10–16 is **0.205042 comments per eligible observation hour** in the displayed dataset. It uses 674 Deals and 6,659 measured intervals, including 14 negative counter changes. The metric first computes each Deal's signed rate, then gives each Deal equal weight. It is not total comment change divided by total hours.
 
 [Follow the number from the dashboard to SQL, eligible intervals, and a saved verification hash →](docs/application/metric-trace.md)
 
-![Deal Explorer and source evidence](docs/application/assets/deal-explorer-r4.jpg)
+![Deal Explorer and observation quality](docs/application/assets/deal-explorer.jpg)
 
-## Verified state — November 20, 2026
+## Data and validation
 
-| Artifact | Coverage and evidence |
-|---|---|
-| AWS collection | Scheduled; latest 50 checked executions succeeded. End date extended through December 5, New York time. |
-| Latest downloaded batch | Through Nov 20 15:31:43 NY; 399 snapshots, 79,356 observations, 6,759 distinct Deals. Existing warehouse: 12 models + 81 data tests passed. |
-| Published dashboard r4 | Through Nov 16 19:31:34 NY; 353 snapshots, 66,833 observations. Separate analytics graph: 9 models, 38 data tests + 6 unit tests. |
-| New public demo | Fictional data; runs the same analytics models and compiled report queries. |
+The screenshots show observations through **November 16, 2026, 7:31 PM New York time**. The runnable demo uses fictional observations and labels them clearly. Collection continues separately; it does not automatically refresh the displayed dataset.
 
-Counts above are versioned observations, not a live status badge. [Validation details and limits](docs/application/verification.md).
+The demo runs the same nine-model analytics graph, including 44 dbt tests, six hand-calculated business tests, and dashboard-to-SQL comparisons. [Dated verification results, dataset versions and coverage](docs/application/verification.md) are available for technical review.
 
 ## Source map
 

@@ -14,6 +14,8 @@ The AWS end date was extended to `2026-12-06T04:59:59Z` (December 5, 23:59:59 NY
 
 ## Checks performed for this public showcase
 
+The presentation interface was subsequently simplified on November 20: version selectors, release IDs, internal storage paths and raw audit JSON were removed from the UI. Dataset coverage, sample sizes, synthetic-data labeling and plain-language comparison explanations remain visible. Both the real-data and synthetic dashboard SQL comparisons passed again; the negative-change example was checked in the browser. Technical provenance remains available through the report tools and metric walkthrough.
+
 - **Clean environment:** created a new Python 3.10 virtual environment and installed the demo requirements. Corrected an actual dependency conflict: the prior UI environment pinned python-dateutil 3.0, while dbt requires a version below 3.0. The unified environment uses 2.9.0.post0 and passes `pip check`.
 - **Relocated source:** built the demo in the new standalone directory, without importing the private platform or sibling analytics source. Synthetic inputs are generated locally; no AWS login or production input files are used.
 - **Actual model execution:** 9 models built; 38 data tests and 6 dbt unit tests passed; reports compiled. Six hand-calculated Python/SQL business tests passed.

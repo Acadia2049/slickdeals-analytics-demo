@@ -47,3 +47,7 @@ The store's `current` file identifies an immutable package by release ID and man
 The public demo starts with the 38-column Clean contract. Production intake still uses the platform's scraper/PySpark code and the operator's separately maintained refresh/release workflow. Its frozen inputs, release receipts, historical regressions and local installation commands are not bundled here. Moving that entire operational workflow into this directory is a separate migration; copying local paths or release history would not make it reproducible.
 
 The nine-model graph is distinct from the older `dbt/` warehouse. Use `analytics/project/` for dashboard metrics. All seven reports consume the same four materialized marts; no business metric is reimplemented in the UI.
+
+## Presentation interface
+
+The dashboard presents dates, sample sizes, metric definitions and observation quality. Internal release IDs, schema versions, storage locations and raw audit objects are kept in the technical tools and walkthrough rather than displayed in the interface. The explorer uses the same Frontpage population as the overview. Missing or incomparable values appear as an em dash with an explanation; synthetic data remains explicitly labeled.
