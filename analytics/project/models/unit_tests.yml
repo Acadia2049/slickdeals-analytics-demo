@@ -1,0 +1,115 @@
+version: 2
+unit_tests:
+  - name: full_sequence_and_strict_snapshot_pairs
+    model: int_snapshot_context
+    description: "跨版本、解析器、截断及未知、1.5/2.5 小时边界和超时均在全序列后判定。"
+    given:
+      - input: ref('stg_collection_run')
+        rows:
+          - {"run_key":"r0","run_id":"id0","snapshot_timestamp":"2026-11-03 00:00:00","raw_schema_version":1,"data_scope":null,"parser_version":null,"is_truncated":false,"declared_rows":1,"raw_sha256":"fixture0","raw_uri":"file0","download_sha256":"fixture0","validation_status":"passed"}
+          - {"run_key":"r1","run_id":"id1","snapshot_timestamp":"2026-11-03 02:00:00","raw_schema_version":2,"data_scope":"server_html_frontpage_slickdeals","parser_version":"frontpage-v2","is_truncated":false,"declared_rows":1,"raw_sha256":"fixture1","raw_uri":"file1","download_sha256":"fixture1","validation_status":"passed"}
+          - {"run_key":"r2","run_id":"id2","snapshot_timestamp":"2026-11-03 03:30:00","raw_schema_version":2,"data_scope":"server_html_frontpage_slickdeals","parser_version":"frontpage-v2","is_truncated":false,"declared_rows":1,"raw_sha256":"fixture2","raw_uri":"file2","download_sha256":"fixture2","validation_status":"passed"}
+          - {"run_key":"r3","run_id":"id3","snapshot_timestamp":"2026-11-03 06:00:00","raw_schema_version":2,"data_scope":"server_html_frontpage_slickdeals","parser_version":"frontpage-v2","is_truncated":false,"declared_rows":1,"raw_sha256":"fixture3","raw_uri":"file3","download_sha256":"fixture3","validation_status":"passed"}
+          - {"run_key":"r4","run_id":"id4","snapshot_timestamp":"2026-11-03 08:30:01","raw_schema_version":2,"data_scope":"server_html_frontpage_slickdeals","parser_version":"frontpage-v2","is_truncated":false,"declared_rows":1,"raw_sha256":"fixture4","raw_uri":"file4","download_sha256":"fixture4","validation_status":"passed"}
+          - {"run_key":"r5","run_id":"id5","snapshot_timestamp":"2026-11-03 10:30:01","raw_schema_version":2,"data_scope":"server_html_frontpage_slickdeals","parser_version":"frontpage-v2","is_truncated":true,"declared_rows":1,"raw_sha256":"fixture5","raw_uri":"file5","download_sha256":"fixture5","validation_status":"passed"}
+          - {"run_key":"r6","run_id":"id6","snapshot_timestamp":"2026-11-03 12:30:01","raw_schema_version":2,"data_scope":"server_html_frontpage_slickdeals","parser_version":"frontpage-v2","is_truncated":false,"declared_rows":1,"raw_sha256":"fixture6","raw_uri":"file6","download_sha256":"fixture6","validation_status":"passed"}
+          - {"run_key":"r7","run_id":"id7","snapshot_timestamp":"2026-11-03 14:30:01","raw_schema_version":2,"data_scope":"server_html_frontpage_slickdeals","parser_version":"frontpage-v2","is_truncated":false,"declared_rows":1,"raw_sha256":"fixture7","raw_uri":"file7","download_sha256":"fixture7","validation_status":"passed"}
+          - {"run_key":"r8","run_id":"id8","snapshot_timestamp":"2026-11-03 16:30:01","raw_schema_version":2,"data_scope":"server_html_frontpage_slickdeals","parser_version":"other-parser","is_truncated":false,"declared_rows":1,"raw_sha256":"fixture8","raw_uri":"file8","download_sha256":"fixture8","validation_status":"passed"}
+          - {"run_key":"r9","run_id":"id9","snapshot_timestamp":"2026-11-03 18:30:01","raw_schema_version":2,"data_scope":"server_html_frontpage_slickdeals","parser_version":"frontpage-v2","is_truncated":false,"declared_rows":1,"raw_sha256":"fixture9","raw_uri":"file9","download_sha256":"fixture9","validation_status":"passed"}
+          - {"run_key":"r10","run_id":"id10","snapshot_timestamp":"2026-11-03 20:30:01","raw_schema_version":2,"data_scope":"server_html_frontpage_slickdeals","parser_version":"frontpage-v2","is_truncated":null,"declared_rows":1,"raw_sha256":"fixture10","raw_uri":"file10","download_sha256":"fixture10","validation_status":"passed"}
+          - {"run_key":"r11","run_id":"id11","snapshot_timestamp":"2026-11-03 22:00:00","raw_schema_version":2,"data_scope":"server_html_frontpage_slickdeals","parser_version":"frontpage-v2","is_truncated":false,"declared_rows":1,"raw_sha256":"fixture11","raw_uri":"file11","download_sha256":"fixture11","validation_status":"passed"}
+          - {"run_key":"r12","run_id":"id12","snapshot_timestamp":"2026-11-03 23:29:59","raw_schema_version":2,"data_scope":"server_html_frontpage_slickdeals","parser_version":"frontpage-v2","is_truncated":false,"declared_rows":1,"raw_sha256":"fixture12","raw_uri":"file12","download_sha256":"fixture12","validation_status":"passed"}
+      - input: ref('stg_run_verification')
+        rows:
+          - {"run_key":"r0","run_id":"id0","observed_at":"2026-11-03 00:00:00","raw_uri":"file0","raw_sha256":"fixture0","verified_rows":1,"verification_status":"success"}
+          - {"run_key":"r1","run_id":"id1","observed_at":"2026-11-03 02:00:00","raw_uri":"file1","raw_sha256":"fixture1","verified_rows":1,"verification_status":"success"}
+          - {"run_key":"r2","run_id":"id2","observed_at":"2026-11-03 03:30:00","raw_uri":"file2","raw_sha256":"fixture2","verified_rows":1,"verification_status":"success"}
+          - {"run_key":"r3","run_id":"id3","observed_at":"2026-11-03 06:00:00","raw_uri":"file3","raw_sha256":"fixture3","verified_rows":1,"verification_status":"success"}
+          - {"run_key":"r4","run_id":"id4","observed_at":"2026-11-03 08:30:01","raw_uri":"file4","raw_sha256":"fixture4","verified_rows":1,"verification_status":"success"}
+          - {"run_key":"r5","run_id":"id5","observed_at":"2026-11-03 10:30:01","raw_uri":"file5","raw_sha256":"fixture5","verified_rows":1,"verification_status":"success"}
+          - {"run_key":"r6","run_id":"id6","observed_at":"2026-11-03 12:30:01","raw_uri":"file6","raw_sha256":"fixture6","verified_rows":1,"verification_status":"success"}
+          - {"run_key":"r7","run_id":"id7","observed_at":"2026-11-03 14:30:01","raw_uri":"file7","raw_sha256":"fixture7","verified_rows":1,"verification_status":"success"}
+          - {"run_key":"r8","run_id":"id8","observed_at":"2026-11-03 16:30:01","raw_uri":"file8","raw_sha256":"fixture8","verified_rows":1,"verification_status":"success"}
+          - {"run_key":"r9","run_id":"id9","observed_at":"2026-11-03 18:30:01","raw_uri":"file9","raw_sha256":"fixture9","verified_rows":1,"verification_status":"success"}
+          - {"run_key":"r10","run_id":"id10","observed_at":"2026-11-03 20:30:01","raw_uri":"file10","raw_sha256":"fixture10","verified_rows":1,"verification_status":"success"}
+          - {"run_key":"r11","run_id":"id11","observed_at":"2026-11-03 22:00:00","raw_uri":"file11","raw_sha256":"fixture11","verified_rows":1,"verification_status":"success"}
+          - {"run_key":"r12","run_id":"id12","observed_at":"2026-11-03 23:29:59","raw_uri":"file12","raw_sha256":"fixture12","verified_rows":1,"verification_status":"success"}
+      - input: ref('stg_clean_observation')
+        rows:
+          - {"snapshot_timestamp":"2026-11-03 00:00:00"}
+          - {"snapshot_timestamp":"2026-11-03 02:00:00"}
+          - {"snapshot_timestamp":"2026-11-03 03:30:00"}
+          - {"snapshot_timestamp":"2026-11-03 06:00:00"}
+          - {"snapshot_timestamp":"2026-11-03 08:30:01"}
+          - {"snapshot_timestamp":"2026-11-03 10:30:01"}
+          - {"snapshot_timestamp":"2026-11-03 12:30:01"}
+          - {"snapshot_timestamp":"2026-11-03 14:30:01"}
+          - {"snapshot_timestamp":"2026-11-03 16:30:01"}
+          - {"snapshot_timestamp":"2026-11-03 18:30:01"}
+          - {"snapshot_timestamp":"2026-11-03 20:30:01"}
+          - {"snapshot_timestamp":"2026-11-03 22:00:00"}
+          - {"snapshot_timestamp":"2026-11-03 23:29:59"}
+    expect:
+      rows:
+        - {"snapshot_sequence":1,"pair_eligible":false,"previous_global_run_key":null,"pair_status":"first_snapshot"}
+        - {"snapshot_sequence":2,"pair_eligible":false,"previous_global_run_key":"r0","pair_status":"version_or_scope"}
+        - {"snapshot_sequence":3,"pair_eligible":true,"previous_global_run_key":"r1","pair_status":"eligible"}
+        - {"snapshot_sequence":4,"pair_eligible":true,"previous_global_run_key":"r2","pair_status":"eligible"}
+        - {"snapshot_sequence":5,"pair_eligible":false,"previous_global_run_key":"r3","pair_status":"elapsed_time"}
+        - {"snapshot_sequence":6,"pair_eligible":false,"previous_global_run_key":"r4","pair_status":"truncation_or_unknown"}
+        - {"snapshot_sequence":7,"pair_eligible":false,"previous_global_run_key":"r5","pair_status":"truncation_or_unknown"}
+        - {"snapshot_sequence":8,"pair_eligible":true,"previous_global_run_key":"r6","pair_status":"eligible"}
+        - {"snapshot_sequence":9,"pair_eligible":false,"previous_global_run_key":"r7","pair_status":"parser_boundary"}
+        - {"snapshot_sequence":10,"pair_eligible":false,"previous_global_run_key":"r8","pair_status":"parser_boundary"}
+        - {"snapshot_sequence":11,"pair_eligible":false,"previous_global_run_key":"r9","pair_status":"truncation_or_unknown"}
+        - {"snapshot_sequence":12,"pair_eligible":false,"previous_global_run_key":"r10","pair_status":"truncation_or_unknown"}
+        - {"snapshot_sequence":13,"pair_eligible":false,"previous_global_run_key":"r11","pair_status":"elapsed_time"}
+  - name: lag_gaps_nulls_and_merchant_switch
+    model: int_observation_history
+    description: "时间轴先于商家和 cohort 切片，保留真实链接和负差值。"
+    given:
+      - input: ref('stg_clean_observation')
+        rows:
+          - {"snapshot_timestamp":"2026-11-03 00:00:00","deal_id":1,"store_normalized":"x","store":"x","comment_count":9,"title":"t0","title_link":"url0"}
+          - {"snapshot_timestamp":"2026-11-03 02:00:00","deal_id":1,"store_normalized":"a","store":"a","comment_count":10,"title":"t1","title_link":"url1"}
+          - {"snapshot_timestamp":"2026-11-03 03:30:00","deal_id":1,"store_normalized":"a","store":"a","comment_count":8,"title":"t2","title_link":"url2"}
+          - {"snapshot_timestamp":"2026-11-03 06:00:00","deal_id":2,"store_normalized":"c","store":"c","comment_count":null,"title":"t3","title_link":"url3"}
+          - {"snapshot_timestamp":"2026-11-03 08:30:01","deal_id":1,"store_normalized":"b","store":"b","comment_count":15,"title":"t4","title_link":"url4"}
+          - {"snapshot_timestamp":"2026-11-03 08:30:01","deal_id":2,"store_normalized":"c","store":"c","comment_count":2,"title":"t4","title_link":"url4"}
+      - input: ref('int_snapshot_context')
+        rows:
+          - {"snapshot_timestamp":"2026-11-03 00:00:00","run_key":"r0","snapshot_sequence":1,"is_business_cohort":false,"pair_eligible":false}
+          - {"snapshot_timestamp":"2026-11-03 02:00:00","run_key":"r1","snapshot_sequence":2,"is_business_cohort":true,"pair_eligible":false}
+          - {"snapshot_timestamp":"2026-11-03 03:30:00","run_key":"r2","snapshot_sequence":3,"is_business_cohort":true,"pair_eligible":true}
+          - {"snapshot_timestamp":"2026-11-03 06:00:00","run_key":"r3","snapshot_sequence":4,"is_business_cohort":true,"pair_eligible":true}
+          - {"snapshot_timestamp":"2026-11-03 08:30:01","run_key":"r4","snapshot_sequence":5,"is_business_cohort":true,"pair_eligible":true}
+    expect:
+      rows:
+        - {"deal_id":1,"snapshot_sequence":1,"audit_comment_delta":null,"merchant_changed_in_v2":true,"previous_title_link":null,"observation_context":"first_observation"}
+        - {"deal_id":1,"snapshot_sequence":2,"audit_comment_delta":1,"merchant_changed_in_v2":true,"previous_title_link":"url0","observation_context":"consecutive_snapshot"}
+        - {"deal_id":1,"snapshot_sequence":3,"audit_comment_delta":-2,"merchant_changed_in_v2":true,"previous_title_link":"url1","observation_context":"consecutive_snapshot"}
+        - {"deal_id":2,"snapshot_sequence":4,"audit_comment_delta":null,"merchant_changed_in_v2":false,"previous_title_link":null,"observation_context":"first_observation"}
+        - {"deal_id":1,"snapshot_sequence":5,"audit_comment_delta":null,"merchant_changed_in_v2":true,"previous_title_link":"url2","observation_context":"reappeared_after_gap"}
+        - {"deal_id":2,"snapshot_sequence":5,"audit_comment_delta":null,"merchant_changed_in_v2":false,"previous_title_link":"url3","observation_context":"consecutive_snapshot"}
+  - name: business_delta_and_counter_exposure
+    model: fct_deal_observation
+    description: "缺失评论不贡献小时；零与负值保留；换店仅排除商家比较。"
+    given:
+      - input: ref('int_observation_history')
+        rows:
+          - {"deal_id":1,"pair_eligible":true,"snapshot_steps":1,"observation_gap_hours":2,"audit_comment_delta":-2,"merchant_changed_in_v2":false}
+          - {"deal_id":2,"pair_eligible":true,"snapshot_steps":1,"observation_gap_hours":2,"audit_comment_delta":0,"merchant_changed_in_v2":false}
+          - {"deal_id":3,"pair_eligible":true,"snapshot_steps":1,"observation_gap_hours":2,"audit_comment_delta":null,"merchant_changed_in_v2":false}
+          - {"deal_id":4,"pair_eligible":true,"snapshot_steps":2,"observation_gap_hours":4,"audit_comment_delta":null,"merchant_changed_in_v2":false}
+          - {"deal_id":5,"pair_eligible":false,"snapshot_steps":1,"observation_gap_hours":2,"audit_comment_delta":3,"merchant_changed_in_v2":false}
+          - {"deal_id":6,"pair_eligible":true,"snapshot_steps":1,"observation_gap_hours":2,"audit_comment_delta":3,"merchant_changed_in_v2":true}
+          - {"deal_id":7,"pair_eligible":false,"snapshot_steps":null,"observation_gap_hours":null,"audit_comment_delta":null,"merchant_changed_in_v2":false}
+    expect:
+      rows:
+        - {"deal_id":1,"interval_eligible":true,"merchant_comparison_eligible":true,"comment_delta":-2,"eligible_comment_hours":2}
+        - {"deal_id":2,"interval_eligible":true,"merchant_comparison_eligible":true,"comment_delta":0,"eligible_comment_hours":2}
+        - {"deal_id":3,"interval_eligible":true,"merchant_comparison_eligible":true,"comment_delta":null,"eligible_comment_hours":null}
+        - {"deal_id":4,"interval_eligible":false,"merchant_comparison_eligible":false,"comment_delta":null,"eligible_comment_hours":null}
+        - {"deal_id":5,"interval_eligible":false,"merchant_comparison_eligible":false,"comment_delta":null,"eligible_comment_hours":null}
+        - {"deal_id":6,"interval_eligible":true,"merchant_comparison_eligible":false,"comment_delta":3,"eligible_comment_hours":2}
+        - {"deal_id":7,"interval_eligible":false,"merchant_comparison_eligible":false,"comment_delta":null,"eligible_comment_hours":null}

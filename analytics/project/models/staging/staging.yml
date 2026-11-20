@@ -1,0 +1,163 @@
+version: 2
+models:
+  - name: stg_clean_observation
+    description: "Deal × UTC 观察时点。保留 PySpark 逐行属性、价格与 provenance。"
+    columns:
+      - name: deal_id
+        description: "Deal 的来源 ID"
+        data_tests: [not_null]
+      - name: snapshot_timestamp
+        description: "UTC 观察时间"
+        data_tests: [not_null]
+      - name: snapshot_date
+        description: "Hive 分区的 UTC 日期"
+      - name: store
+        description: "当次显示的商家"
+      - name: store_normalized
+        description: "PySpark 规范化商家身份"
+      - name: title
+        description: "当次观察标题"
+        data_tests: [not_null]
+      - name: title_link
+        description: "当次清洗后的完整来源链接"
+      - name: deal_path
+        description: "当次来源链接路径"
+      - name: deal_finder
+        description: "当次 Deal Finder"
+      - name: deal_finder_normalized
+        description: "当次规范化 Deal Finder"
+      - name: editors_note
+        description: "当次编辑注释"
+      - name: deal_price_raw
+        description: "当次报价文本"
+      - name: deal_price_type
+        description: "PySpark 识别的报价类型"
+      - name: deal_price_amount
+        description: "报价金额"
+      - name: original_price_raw
+        description: "原价文本"
+      - name: original_price_amount
+        description: "原价金额"
+      - name: discount_percentage
+        description: "折扣百分数"
+      - name: price_parse_success
+        description: "报价解析结果"
+      - name: comment_count
+        description: "当次显示评论计数"
+      - name: vote_count
+        description: "当次显示投票计数"
+      - name: views
+        description: "当次显示浏览计数"
+      - name: page_section
+        description: "页面区段"
+      - name: card_layout
+        description: "卡片布局"
+      - name: record_position
+        description: "来源记录位置"
+      - name: record_position_source
+        description: "parser 或恢复的数组顺序"
+      - name: dom_position
+        description: "v2 DOM 位置"
+      - name: section_position
+        description: "v2 区段内位置"
+      - name: card_badge
+        description: "卡片标签"
+      - name: raw_schema_version
+        description: "观察记录版本"
+      - name: parser_version
+        description: "采集解析器，旧版可缺失"
+      - name: data_scope
+        description: "采集范围，旧版可缺失"
+      - name: candidate_records
+        description: "快照候选数"
+      - name: omitted_count
+        description: "快照已知省略数"
+      - name: is_truncated
+        description: "快照是否截断"
+      - name: snapshot_timestamp_source
+        description: "PySpark 时戳来源"
+      - name: source_file
+        description: "Raw 文件 basename，不能作为 Run 键"
+      - name: pipeline_run_id
+        description: "PySpark 批次号"
+        data_tests: [not_null]
+      - name: record_hash
+        description: "PySpark 记录 SHA-256"
+  - name: stg_collection_run
+    description: "每份成功下载的 Run 清单一行，以 run_key 标识。"
+    columns:
+      - name: run_key
+        description: "稳定的采集 Run 键"
+        data_tests: [unique, not_null]
+      - name: run_id
+        description: "JSON 内的原始执行 ID"
+        data_tests: [not_null]
+      - name: scheduled_at
+        description: "计划时间 UTC"
+      - name: observed_at
+        description: "采集观察时间 UTC"
+      - name: completed_at
+        description: "采集完成时间 UTC"
+      - name: snapshot_timestamp
+        description: "快照观察时间 UTC"
+        data_tests: [unique, not_null]
+      - name: manifest_schema_version
+        description: "清单版本"
+      - name: declared_raw_schema_version
+        description: "清单显式声明的记录版本，v1 可缺失"
+      - name: raw_schema_version
+        description: "按已知 manifest v1 契约补全后的版本"
+      - name: parser_version
+        description: "采集解析器"
+      - name: data_scope
+        description: "页面范围"
+      - name: declared_rows
+        description: "清单声明的输出行数"
+      - name: candidate_records
+        description: "候选记录数"
+      - name: omitted_count
+        description: "已知省略数"
+      - name: is_truncated
+        description: "是否截断"
+      - name: validation_status
+        description: "采集端验证结果"
+      - name: raw_uri
+        description: "Raw 对象 URI，仅用于溯源"
+      - name: raw_sha256
+        description: "清单声明的 Raw SHA"
+      - name: download_sha256
+        description: "下载时实算的 Raw SHA"
+      - name: selector_failures
+        description: "选择器失败数"
+      - name: required_field_completeness
+        description: "采集必填字段完整率"
+      - name: volume_status
+        description: "采集规模等级"
+      - name: volume_reason
+        description: "规模判断说明"
+  - name: stg_run_verification
+    description: "每个 run_key 一份独立验证证据。"
+    columns:
+      - name: run_key
+        description: "独立证据声明的 Run 键"
+        data_tests: [unique, not_null]
+      - name: run_id
+        description: "JSON 内的执行 ID，禁止读取 Hive 目录覆盖值"
+        data_tests: [not_null]
+      - name: raw_uri
+        description: "验证的 Raw 对象"
+      - name: raw_sha256
+        description: "验证器记录的 Raw SHA"
+      - name: verified_rows
+        description: "验证器核对的行数"
+      - name: observed_at
+        description: "验证证据中的观察时间 UTC"
+      - name: verified_at
+        description: "验证完成时间 UTC"
+      - name: verification_status
+        description: "独立验证器状态"
+      - name: directory_run_key
+        description: "从验证文件路径提取的 Run 键"
+      - name: evidence_path
+        description: "验证文件相对输入根路径"
+        data_tests: [unique, not_null]

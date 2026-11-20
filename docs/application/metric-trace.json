@@ -1,0 +1,53 @@
+{
+  "release_id": "sd-20261117T022306Z-r4",
+  "manifest_sha256": "f7af7dba65043093750a262d2a322b98675329703891a7298bafd8cc90c7e441",
+  "merchant": "Amazon",
+  "ny_date_range": [
+    "2026-11-10",
+    "2026-11-16"
+  ],
+  "published": {
+    "merchant_id": "2d0d4809e6bdb6f4db3e547f27b1873c",
+    "merchant_name": "Amazon",
+    "eligible_deals": 674,
+    "eligible_intervals": 6659,
+    "deals_with_comment_rate": 674,
+    "intervals_with_comments": 6659,
+    "comment_hours": 13317.855,
+    "comment_net_growth": 2383,
+    "comment_velocity_per_hour": 0.20504239091806797
+  },
+  "independent_rate": 0.20504239091806814,
+  "negative_intervals": 14,
+  "missing_intervals": 0,
+  "negative_example": [
+    {
+      "deal_id": 20255670,
+      "snapshot_timestamp": "2026-11-10 06:31:45",
+      "previous_snapshot_timestamp": "2026-11-10 04:31:40",
+      "comment_count": 16,
+      "previous_comment_count": 17,
+      "audit_comment_delta": -1,
+      "comment_delta": -1,
+      "eligible_comment_hours": 2.001388888888889,
+      "run_key": "ex_6809d0ea-df22-4b85-885f-5ebb8e257002-eb28ba4120",
+      "record_hash": "b009ec4912ccf09bdbfa5e394d7d5d872bc81cb101d5043461577bb06cbb7233",
+      "raw_sha256": "883777d498d4eee1f3ddad22d8e7747388bdae414eb9013a9093ca4bf80c8e04",
+      "verification_status": "success"
+    }
+  ],
+  "raw_source_recheck": [
+    {
+      "timestamp": "2026-11-10T04:31:40Z",
+      "comment_count": 17,
+      "raw_sha256": "d1c10bb949a9ccf393f5f0a49de9bf085ccc60ddd740e7ddb17d2f4c2dc7b0fa",
+      "verification_status": "success"
+    },
+    {
+      "timestamp": "2026-11-10T06:31:45Z",
+      "comment_count": 16,
+      "raw_sha256": "883777d498d4eee1f3ddad22d8e7747388bdae414eb9013a9093ca4bf80c8e04",
+      "verification_status": "success"
+    }
+  ]
+}

@@ -1,0 +1,161 @@
+version: 2
+models:
+  - name: int_observation_history
+    description: "每 Deal × 真实快照一行。先形成全历史，再分类相邻、重现和换店。"
+    columns:
+      - name: deal_id
+        description: "Deal 的来源 ID"
+      - name: snapshot_timestamp
+        description: "UTC 观察时间"
+      - name: snapshot_date
+        description: "Hive 分区的 UTC 日期"
+      - name: store
+        description: "当次显示的商家"
+      - name: store_normalized
+        description: "PySpark 规范化商家身份"
+      - name: title
+        description: "当次观察标题"
+      - name: title_link
+        description: "当次清洗后的完整来源链接"
+      - name: deal_path
+        description: "当次来源链接路径"
+      - name: deal_finder
+        description: "当次 Deal Finder"
+      - name: deal_finder_normalized
+        description: "当次规范化 Deal Finder"
+      - name: editors_note
+        description: "当次编辑注释"
+      - name: deal_price_raw
+        description: "当次报价文本"
+      - name: deal_price_type
+        description: "PySpark 识别的报价类型"
+      - name: deal_price_amount
+        description: "报价金额"
+      - name: original_price_raw
+        description: "原价文本"
+      - name: original_price_amount
+        description: "原价金额"
+      - name: discount_percentage
+        description: "折扣百分数"
+      - name: price_parse_success
+        description: "报价解析结果"
+      - name: comment_count
+        description: "当次显示评论计数"
+      - name: vote_count
+        description: "当次显示投票计数"
+      - name: views
+        description: "当次显示浏览计数"
+      - name: page_section
+        description: "页面区段"
+      - name: card_layout
+        description: "卡片布局"
+      - name: record_position
+        description: "来源记录位置"
+      - name: record_position_source
+        description: "parser 或恢复的数组顺序"
+      - name: dom_position
+        description: "v2 DOM 位置"
+      - name: section_position
+        description: "v2 区段内位置"
+      - name: card_badge
+        description: "卡片标签"
+      - name: raw_schema_version
+        description: "观察记录版本"
+      - name: parser_version
+        description: "采集解析器，旧版可缺失"
+      - name: data_scope
+        description: "采集范围，旧版可缺失"
+      - name: candidate_records
+        description: "快照候选数"
+      - name: omitted_count
+        description: "快照已知省略数"
+      - name: is_truncated
+        description: "快照是否截断"
+      - name: snapshot_timestamp_source
+        description: "PySpark 时戳来源"
+      - name: source_file
+        description: "Raw 文件 basename，不能作为 Run 键"
+      - name: pipeline_run_id
+        description: "PySpark 批次号"
+      - name: record_hash
+        description: "PySpark 记录 SHA-256"
+      - name: run_key
+        description: "采集 Run 键"
+      - name: run_id
+        description: "采集执行 ID"
+      - name: snapshot_sequence
+        description: "全局观察时点编号"
+      - name: previous_global_run_key
+        description: "前一全局时点的 Run 键"
+      - name: previous_global_snapshot_timestamp
+        description: "前一全局时点 UTC"
+      - name: global_gap_hours
+        description: "全局原始间隔小时"
+      - name: pair_status
+        description: "全局相邻快照资格原因"
+      - name: pair_eligible
+        description: "快照对可比"
+      - name: is_business_cohort
+        description: "批准的 v2 样本"
+      - name: raw_uri
+        description: "当次 Raw URI"
+      - name: raw_sha256
+        description: "当次已验证 Raw SHA"
+      - name: verification_status
+        description: "独立验证状态"
+      - name: verified_at
+        description: "验证完成时间 UTC"
+      - name: evidence_path
+        description: "本地验证证据相对路径"
+      - name: volume_status
+        description: "采集量质检等级"
+      - name: previous_run_key
+        description: "该 Deal 前一次观察的 run_key"
+      - name: previous_snapshot_timestamp
+        description: "该 Deal 前一次观察的 snapshot_timestamp"
+      - name: previous_snapshot_sequence
+        description: "该 Deal 前一次观察的 snapshot_sequence"
+      - name: previous_store_normalized
+        description: "该 Deal 前一次观察的 store_normalized"
+      - name: previous_title
+        description: "该 Deal 前一次观察的 title"
+      - name: previous_title_link
+        description: "该 Deal 前一次观察的 title_link"
+      - name: previous_deal_finder
+        description: "该 Deal 前一次观察的 deal_finder"
+      - name: previous_comment_count
+        description: "该 Deal 前一次观察的 comment_count"
+      - name: previous_vote_count
+        description: "该 Deal 前一次观察的 vote_count"
+      - name: previous_views
+        description: "该 Deal 前一次观察的 views"
+      - name: previous_deal_price_raw
+        description: "该 Deal 前一次观察的 deal_price_raw"
+      - name: previous_deal_price_amount
+        description: "该 Deal 前一次观察的 deal_price_amount"
+      - name: previous_deal_price_type
+        description: "该 Deal 前一次观察的 deal_price_type"
+      - name: previous_price_parse_success
+        description: "该 Deal 前一次观察的 price_parse_success"
+      - name: previous_record_hash
+        description: "该 Deal 前一次观察的 record_hash"
+      - name: merchant_id
+        description: "规范化商家身份的兼容 MD5 键"
+      - name: merchant_name
+        description: "同一商家身份在全历史的稳定展示名"
+      - name: snapshot_steps
+        description: "与该 Deal 上一次观察相隔多少原始时点"
+      - name: observation_gap_hours
+        description: "此 Deal 两次实测观察间相隔小时"
+      - name: merchant_changed_in_v2
+        description: "此 Deal 在完整批准 cohort 出现过多个商家身份"
+      - name: merchant_changed_since_observation
+        description: "自前次观察是否换店，首次为 NULL"
+      - name: observation_context
+        description: "首次、连续或缺席重现"
+      - name: audit_comment_delta
+        description: "原始连续观察的有符号评论差，可跨版本"
+      - name: audit_vote_delta
+        description: "原始连续观察的有符号票差"
+      - name: audit_views_delta
+        description: "原始连续观察的有符号浏览数差"

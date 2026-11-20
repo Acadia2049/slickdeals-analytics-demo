@@ -1,0 +1,154 @@
+[
+  {
+    "name": "snapshot_timestamp",
+    "type": "TIMESTAMP"
+  },
+  {
+    "name": "deal_id",
+    "type": "BIGINT"
+  },
+  {
+    "name": "store",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "store_normalized",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "title",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "title_link",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "deal_path",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "deal_price_raw",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "deal_price_type",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "deal_price_amount",
+    "type": "DECIMAL(12,2)"
+  },
+  {
+    "name": "discount_percentage",
+    "type": "DECIMAL(5,2)"
+  },
+  {
+    "name": "price_parse_success",
+    "type": "BOOLEAN"
+  },
+  {
+    "name": "original_price_raw",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "original_price_amount",
+    "type": "DECIMAL(12,2)"
+  },
+  {
+    "name": "deal_finder",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "deal_finder_normalized",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "vote_count",
+    "type": "INTEGER"
+  },
+  {
+    "name": "comment_count",
+    "type": "INTEGER"
+  },
+  {
+    "name": "views",
+    "type": "BIGINT"
+  },
+  {
+    "name": "editors_note",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "page_section",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "card_layout",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "record_position",
+    "type": "INTEGER"
+  },
+  {
+    "name": "record_position_source",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "dom_position",
+    "type": "INTEGER"
+  },
+  {
+    "name": "section_position",
+    "type": "INTEGER"
+  },
+  {
+    "name": "card_badge",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "raw_schema_version",
+    "type": "INTEGER"
+  },
+  {
+    "name": "parser_version",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "data_scope",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "candidate_records",
+    "type": "INTEGER"
+  },
+  {
+    "name": "omitted_count",
+    "type": "INTEGER"
+  },
+  {
+    "name": "is_truncated",
+    "type": "BOOLEAN"
+  },
+  {
+    "name": "snapshot_timestamp_source",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "source_file",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "pipeline_run_id",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "record_hash",
+    "type": "VARCHAR"
+  },
+  {
+    "name": "snapshot_date",
+    "type": "DATE"
+  }
+]

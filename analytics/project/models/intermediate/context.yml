@@ -1,0 +1,85 @@
+version: 2
+models:
+  - name: int_snapshot_context
+    description: "每个经双重验证的真实 Run 一行，包括 v1 和截断观察。"
+    columns:
+      - name: run_key
+        description: "稳定的采集 Run 键"
+        data_tests: [unique, not_null]
+      - name: run_id
+        description: "JSON 内的原始执行 ID"
+      - name: scheduled_at
+        description: "计划时间 UTC"
+      - name: observed_at
+        description: "采集观察时间 UTC"
+      - name: completed_at
+        description: "采集完成时间 UTC"
+      - name: snapshot_timestamp
+        description: "快照观察时间 UTC"
+      - name: manifest_schema_version
+        description: "清单版本"
+      - name: declared_raw_schema_version
+        description: "清单显式声明的记录版本，v1 可缺失"
+      - name: raw_schema_version
+        description: "按已知 manifest v1 契约补全后的版本"
+      - name: parser_version
+        description: "采集解析器"
+      - name: data_scope
+        description: "页面范围"
+      - name: declared_rows
+        description: "清单声明的输出行数"
+      - name: candidate_records
+        description: "候选记录数"
+      - name: omitted_count
+        description: "已知省略数"
+      - name: is_truncated
+        description: "是否截断"
+      - name: validation_status
+        description: "采集端验证结果"
+      - name: raw_uri
+        description: "Raw 对象 URI，仅用于溯源"
+      - name: raw_sha256
+        description: "清单声明的 Raw SHA"
+      - name: download_sha256
+        description: "下载时实算的 Raw SHA"
+      - name: selector_failures
+        description: "选择器失败数"
+      - name: required_field_completeness
+        description: "采集必填字段完整率"
+      - name: volume_status
+        description: "采集规模等级"
+      - name: volume_reason
+        description: "规模判断说明"
+      - name: verified_rows
+        description: "验证器核对的行数"
+      - name: verified_at
+        description: "验证完成时间 UTC"
+      - name: verification_status
+        description: "独立验证器状态"
+      - name: evidence_path
+        description: "验证文件相对输入根路径"
+      - name: observation_rows
+        description: "Clean 实际观察行数"
+      - name: snapshot_sequence
+        description: "全体已验证真实快照按 UTC 时间编号"
+        data_tests: [unique, not_null]
+      - name: previous_global_run_key
+        description: "前一个真实快照的 Run 键"
+      - name: previous_global_snapshot_timestamp
+        description: "前一全局快照时间"
+      - name: previous_global_version
+        description: "前一快照版本"
+      - name: previous_global_parser
+        description: "前一快照 parser"
+      - name: previous_global_scope
+        description: "前一快照 scope"
+      - name: previous_global_truncated
+        description: "前一快照是否截断"
+      - name: global_gap_hours
+        description: "前后原始快照的实际时间差，小时"
+      - name: is_business_cohort
+        description: "属于已批准的 v2 Frontpage parser 和范围"
+      - name: pair_status
+        description: "相邻快照对资格或首个未通过原因"
+      - name: pair_eligible
+        description: "两端同一批准 cohort，明确未截断，间隔 1.5 到 2.5 小时（含端点）"

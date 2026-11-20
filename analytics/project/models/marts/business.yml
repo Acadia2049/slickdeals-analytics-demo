@@ -1,0 +1,226 @@
+version: 2
+models:
+  - name: mart_deal_first_observed
+    description: "批准 v2 cohort 每 Deal 一条，冻结首观察的商家和报价。"
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: deal_id
+        data_type: bigint
+        description: "Deal ID"
+        data_tests: [not_null, unique]
+      - name: first_run_key
+        data_type: varchar
+        description: "首观察的采集 Run"
+      - name: first_sequence
+        data_type: bigint
+        description: "首观察在全局时间轴的序号"
+      - name: first_observed_at
+        data_type: timestamp
+        description: "首观察 UTC 时点"
+      - name: first_merchant_id
+        data_type: varchar
+        description: "首观察的商家身份"
+      - name: first_merchant_name
+        data_type: varchar
+        description: "首商家统一展示名"
+      - name: first_observed_store
+        data_type: varchar
+        description: "首观察当时的商家文本"
+      - name: first_title
+        data_type: varchar
+        description: "首观察标题"
+      - name: first_link
+        data_type: varchar
+        description: "首观察当时的链接"
+      - name: first_price_raw
+        data_type: varchar
+        description: "首观察报价原文"
+      - name: first_price_type
+        data_type: varchar
+        description: "首观察原始报价类型"
+      - name: first_price_amount
+        data_type: decimal(12,2)
+        description: "首观察金额"
+      - name: price_parse_success
+        data_type: boolean
+        description: "首观察解析标记"
+      - name: ambiguous_comma_price
+        data_type: boolean
+        description: "首观察出现歧义逗号金额"
+      - name: is_baseline_deal
+        data_type: boolean
+        description: "首次出现于完整 v2 的第一个快照"
+      - name: merchant_changed_in_v2
+        data_type: boolean
+        description: "完整 cohort 内商家是否变化"
+      - name: seen_in_legacy
+        data_type: boolean
+        description: "在可用 v1 历史中观察过"
+      - name: raw_uri
+        data_type: varchar
+        description: "首观察的 Raw URI"
+      - name: raw_sha256
+        data_type: varchar
+        description: "首观察来源对象哈希"
+      - name: record_hash
+        data_type: varchar
+        description: "首观察记录哈希"
+      - name: is_newly_observed
+        data_type: boolean
+        description: "完整 v2 基线后首次观察"
+      - name: fixed_price_eligible
+        data_type: boolean
+        description: "首观察为解析成功的非负无歧义固定报价"
+  - name: mart_merchant_snapshot
+    description: "批准 cohort 商家 × 真实快照，唯一键 merchant_id、run_key。"
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: merchant_id
+        data_type: varchar
+        description: "本 cohort 的商家身份"
+      - name: merchant_name
+        data_type: varchar
+        description: "稳定展示名"
+      - name: run_key
+        data_type: varchar
+        description: "本端真实 Run"
+      - name: snapshot_timestamp
+        data_type: timestamp
+        description: "当前快照 UTC"
+      - name: snapshot_sequence
+        data_type: bigint
+        description: "完整原始时间轴序号"
+      - name: previous_global_run_key
+        data_type: varchar
+        description: "前一真实快照，可能在窗口外"
+      - name: pair_eligible
+        data_type: boolean
+        description: "本端与前一全局快照可比"
+      - name: full_snapshot_deals
+        data_type: bigint
+        description: "全快照观察数，在筛选商家前固定"
+      - name: merchant_deals
+        data_type: bigint
+        description: "当前所属商家的观察数，已采集但缺席记零"
+      - name: merchant_share
+        data_type: double
+        description: "当前数除以全快照数，零分母为 NULL"
+      - name: newly_observed
+        data_type: bigint
+        description: "归本端首商家的基线后新见 Deal"
+      - name: baseline_deals
+        data_type: bigint
+        description: "首个 cohort 快照的首次观察"
+      - name: newly_seen_in_legacy
+        data_type: bigint
+        description: "本端新见且曾在 v1 出现"
+      - name: previous_memberships
+        data_type: bigint
+        description: "可比对前端本商家成员数，含消失和转出"
+      - name: retained_memberships
+        data_type: bigint
+        description: "前端成员在本端仍属相同商家"
+      - name: transferred_out
+        data_type: bigint
+        description: "前端成员本端存在但换店"
+  - name: mart_collection_quality
+    description: "每个已独立验证的真实 Run 一行。冲突由上游测试阻断。"
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: run_key
+        data_type: varchar
+        description: "采集 Run 键"
+        data_tests: [not_null, unique]
+      - name: run_id
+        data_type: varchar
+        description: "清单和独立验证一致的原始 ID"
+      - name: snapshot_timestamp
+        data_type: timestamp
+        description: "观察时点 UTC"
+      - name: snapshot_sequence
+        data_type: bigint
+        description: "原始序号"
+      - name: raw_schema_version
+        data_type: bigint
+        description: "记录版本"
+      - name: parser_version
+        data_type: varchar
+        description: "解析器，旧版可缺失"
+      - name: data_scope
+        data_type: varchar
+        description: "采集范围，旧版可缺失"
+      - name: declared_rows
+        data_type: bigint
+        description: "清单声明行数"
+      - name: verified_rows
+        data_type: bigint
+        description: "独立验证行数"
+      - name: observation_rows
+        data_type: bigint
+        description: "Clean 实测行数"
+      - name: candidate_records
+        data_type: bigint
+        description: "候选数"
+      - name: omitted_count
+        data_type: bigint
+        description: "已证明省略的候选数"
+      - name: is_truncated
+        data_type: boolean
+        description: "是否截断，未知保留 NULL"
+      - name: volume_status
+        data_type: varchar
+        description: "原始体量等级"
+      - name: volume_reason
+        data_type: varchar
+        description: "体量等级原因"
+      - name: selector_failures
+        data_type: bigint
+        description: "采集选择器失败次数"
+      - name: required_field_completeness
+        data_type: double
+        description: "采集必填字段完整率"
+      - name: validation_status
+        data_type: varchar
+        description: "采集校验结果"
+      - name: verification_status
+        data_type: varchar
+        description: "独立校验结果"
+      - name: verified_at
+        data_type: timestamp
+        description: "验证时点 UTC"
+      - name: evidence_path
+        data_type: varchar
+        description: "独立验证 JSON 相对路径"
+      - name: raw_uri
+        data_type: varchar
+        description: "Raw 定位"
+      - name: raw_sha256
+        data_type: varchar
+        description: "来源对象哈希"
+      - name: download_sha256
+        data_type: varchar
+        description: "下载器实测哈希"
+      - name: previous_global_run_key
+        data_type: varchar
+        description: "前一个全局 Run"
+      - name: global_gap_hours
+        data_type: double
+        description: "与前一快照实际间隔小时"
+      - name: pair_status
+        data_type: varchar
+        description: "区间资格或排除原因"
+      - name: pair_eligible
+        data_type: boolean
+        description: "业务快照对资格"
+      - name: truncation_state
+        data_type: varchar
+        description: "complete、truncated 或 unknown"
+      - name: volume_state
+        data_type: varchar
+        description: "体量等级，缺失显示 unknown"

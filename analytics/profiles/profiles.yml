@@ -1,0 +1,10 @@
+slickdeals_candidate:
+  target: candidate
+  outputs:
+    candidate:
+      type: duckdb
+      path: "{{ env_var('SD_CANDIDATE_DB') }}"
+      schema: analytics
+      threads: 2
+      settings:
+        TimeZone: UTC

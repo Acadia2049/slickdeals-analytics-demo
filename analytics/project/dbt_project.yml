@@ -1,0 +1,18 @@
+name: slickdeals_analytics
+version: '0.1.0'
+config-version: 2
+require-dbt-version: "=1.11.15"
+profile: slickdeals_candidate
+model-paths: [models]
+analysis-paths: [analyses]
+test-paths: [tests]
+models:
+  slickdeals_analytics:
+    staging:
+      +schema: staging
+      +materialized: view
+    intermediate:
+      +schema: intermediate
+    marts:
+      +schema: marts
+      +materialized: table

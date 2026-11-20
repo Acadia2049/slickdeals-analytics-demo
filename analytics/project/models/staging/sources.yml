@@ -1,0 +1,26 @@
+version: 2
+sources:
+  - name: frozen_batch
+    description: "本次构建选择的本地冻结批次。仅成功且独立验证过的采集，无调度失败或空快照记录。"
+    tables:
+      - name: clean_observations
+        description: "冻结批次的分区 Parquet，一 Deal × 观察时点。"
+        config:
+          meta:
+            formatter: oldstyle
+            external_location: >-
+              read_parquet('{{ env_var("SD_INPUT_ROOT") }}/clean/snapshot_date=*/*.parquet', hive_partitioning=true)
+      - name: collection_runs
+        description: "下载时验证通过的 Run 清单，每 run_key 一行。"
+        config:
+          meta:
+            formatter: oldstyle
+            external_location: >-
+              read_json('{{ env_var("SD_INPUT_ROOT") }}/source/metadata/collection_runs.json', format='array', hive_partitioning=false, filename=true, columns={'run_key':'varchar', 'run_id':'varchar', 'schema_version':'bigint', 'raw_schema_version':'bigint', 'parser_version':'varchar', 'data_scope':'varchar', 'scheduled_at':'timestamptz', 'completed_at':'timestamptz', 'observed_at':'timestamptz', 'snapshot_timestamp':'timestamptz', 'row_count':'bigint', 'candidate_records':'bigint', 'omitted_count':'bigint', 'is_truncated':'boolean', 'validation_status':'varchar', 'raw_location':'varchar', 'raw_sha256':'varchar', 'verified_sha256':'varchar', 'selector_failures':'bigint', 'required_field_completeness':'double', 'volume_assessment':'struct(status varchar,reason varchar)'})
+      - name: run_verifications
+        description: "独立验证器的 JSON，每 Run 一个文件，目录分区的 run_id 实为 run_key。"
+        config:
+          meta:
+            formatter: oldstyle
+            external_location: >-
+              read_json('{{ env_var("SD_INPUT_ROOT") }}/source/evidence/collection_14d/campaign_id=slickdeals-14d/run_id=*/verification.json', format='unstructured', hive_partitioning=false, filename=true, columns={'run_id':'varchar', 'run_key':'varchar', 'observed_at':'timestamptz', 'row_count':'bigint', 'status':'varchar', 'verified_at':'timestamptz', 'raw_uri':'varchar', 'raw_sha256':'varchar'})

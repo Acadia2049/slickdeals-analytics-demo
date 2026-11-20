@@ -1,0 +1,267 @@
+version: 2
+models:
+  - name: fct_deal_observation
+    description: "每 Deal × Run 一行，保留 v1/v2。业务差与原始审计差分别定义。"
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: deal_id
+        description: "Deal 的来源 ID"
+        data_type: bigint
+        data_tests: [not_null]
+      - name: snapshot_timestamp
+        description: "UTC 观察时间"
+        data_type: timestamp
+      - name: snapshot_date
+        description: "Hive 分区的 UTC 日期"
+        data_type: date
+      - name: store
+        description: "当次显示的商家"
+        data_type: varchar
+      - name: store_normalized
+        description: "PySpark 规范化商家身份"
+        data_type: varchar
+      - name: title
+        description: "当次观察标题"
+        data_type: varchar
+      - name: title_link
+        description: "当次清洗后的完整来源链接"
+        data_type: varchar
+      - name: deal_path
+        description: "当次来源链接路径"
+        data_type: varchar
+      - name: deal_finder
+        description: "当次 Deal Finder"
+        data_type: varchar
+      - name: deal_finder_normalized
+        description: "当次规范化 Deal Finder"
+        data_type: varchar
+      - name: editors_note
+        description: "当次编辑注释"
+        data_type: varchar
+      - name: deal_price_raw
+        description: "当次报价文本"
+        data_type: varchar
+      - name: deal_price_type
+        description: "PySpark 识别的报价类型"
+        data_type: varchar
+      - name: deal_price_amount
+        description: "报价金额"
+        data_type: decimal(12,2)
+      - name: original_price_raw
+        description: "原价文本"
+        data_type: varchar
+      - name: original_price_amount
+        description: "原价金额"
+        data_type: decimal(12,2)
+      - name: discount_percentage
+        description: "折扣百分数"
+        data_type: decimal(5,2)
+      - name: price_parse_success
+        description: "报价解析结果"
+        data_type: boolean
+      - name: comment_count
+        description: "当次显示评论计数"
+        data_type: integer
+      - name: vote_count
+        description: "当次显示投票计数"
+        data_type: integer
+      - name: views
+        description: "当次显示浏览计数"
+        data_type: bigint
+      - name: page_section
+        description: "页面区段"
+        data_type: varchar
+      - name: card_layout
+        description: "卡片布局"
+        data_type: varchar
+      - name: record_position
+        description: "来源记录位置"
+        data_type: integer
+      - name: record_position_source
+        description: "parser 或恢复的数组顺序"
+        data_type: varchar
+      - name: dom_position
+        description: "v2 DOM 位置"
+        data_type: integer
+      - name: section_position
+        description: "v2 区段内位置"
+        data_type: integer
+      - name: card_badge
+        description: "卡片标签"
+        data_type: varchar
+      - name: raw_schema_version
+        description: "观察记录版本"
+        data_type: integer
+      - name: parser_version
+        description: "采集解析器，旧版可缺失"
+        data_type: varchar
+      - name: data_scope
+        description: "采集范围，旧版可缺失"
+        data_type: varchar
+      - name: candidate_records
+        description: "快照候选数"
+        data_type: integer
+      - name: omitted_count
+        description: "快照已知省略数"
+        data_type: integer
+      - name: is_truncated
+        description: "快照是否截断"
+        data_type: boolean
+      - name: snapshot_timestamp_source
+        description: "PySpark 时戳来源"
+        data_type: varchar
+      - name: source_file
+        description: "Raw 文件 basename，不能作为 Run 键"
+        data_type: varchar
+      - name: pipeline_run_id
+        description: "PySpark 批次号"
+        data_type: varchar
+      - name: record_hash
+        description: "PySpark 记录 SHA-256"
+        data_type: varchar
+      - name: run_key
+        description: "采集 Run 键"
+        data_type: varchar
+        data_tests: [not_null]
+      - name: run_id
+        description: "采集执行 ID"
+        data_type: varchar
+      - name: snapshot_sequence
+        description: "全局观察时点编号"
+        data_type: bigint
+      - name: previous_global_run_key
+        description: "前一全局时点的 Run 键"
+        data_type: varchar
+      - name: previous_global_snapshot_timestamp
+        description: "前一全局时点 UTC"
+        data_type: timestamp
+      - name: global_gap_hours
+        description: "全局原始间隔小时"
+        data_type: double
+      - name: pair_status
+        description: "全局相邻快照资格原因"
+        data_type: varchar
+      - name: pair_eligible
+        description: "快照对可比"
+        data_type: boolean
+      - name: is_business_cohort
+        description: "批准的 v2 样本"
+        data_type: boolean
+      - name: raw_uri
+        description: "当次 Raw URI"
+        data_type: varchar
+      - name: raw_sha256
+        description: "当次已验证 Raw SHA"
+        data_type: varchar
+      - name: verification_status
+        description: "独立验证状态"
+        data_type: varchar
+      - name: verified_at
+        description: "验证完成时间 UTC"
+        data_type: timestamp
+      - name: evidence_path
+        description: "本地验证证据相对路径"
+        data_type: varchar
+      - name: volume_status
+        description: "采集量质检等级"
+        data_type: varchar
+      - name: previous_run_key
+        description: "该 Deal 前一次观察的 run_key"
+        data_type: varchar
+      - name: previous_snapshot_timestamp
+        description: "该 Deal 前一次观察的 snapshot_timestamp"
+        data_type: timestamp
+      - name: previous_snapshot_sequence
+        description: "该 Deal 前一次观察的 snapshot_sequence"
+        data_type: bigint
+      - name: previous_store_normalized
+        description: "该 Deal 前一次观察的 store_normalized"
+        data_type: varchar
+      - name: previous_title
+        description: "该 Deal 前一次观察的 title"
+        data_type: varchar
+      - name: previous_title_link
+        description: "该 Deal 前一次观察的 title_link"
+        data_type: varchar
+      - name: previous_deal_finder
+        description: "该 Deal 前一次观察的 deal_finder"
+        data_type: varchar
+      - name: previous_comment_count
+        description: "该 Deal 前一次观察的 comment_count"
+        data_type: integer
+      - name: previous_vote_count
+        description: "该 Deal 前一次观察的 vote_count"
+        data_type: integer
+      - name: previous_views
+        description: "该 Deal 前一次观察的 views"
+        data_type: bigint
+      - name: previous_deal_price_raw
+        description: "该 Deal 前一次观察的 deal_price_raw"
+        data_type: varchar
+      - name: previous_deal_price_amount
+        description: "该 Deal 前一次观察的 deal_price_amount"
+        data_type: decimal(12,2)
+      - name: previous_deal_price_type
+        description: "该 Deal 前一次观察的 deal_price_type"
+        data_type: varchar
+      - name: previous_price_parse_success
+        description: "该 Deal 前一次观察的 price_parse_success"
+        data_type: boolean
+      - name: previous_record_hash
+        description: "该 Deal 前一次观察的 record_hash"
+        data_type: varchar
+      - name: merchant_id
+        description: "规范化商家身份的兼容 MD5 键"
+        data_type: varchar
+      - name: merchant_name
+        description: "同一商家身份在全历史的稳定展示名"
+        data_type: varchar
+      - name: snapshot_steps
+        description: "与该 Deal 上一次观察相隔多少原始时点"
+        data_type: bigint
+      - name: observation_gap_hours
+        description: "此 Deal 两次实测观察间相隔小时"
+        data_type: double
+      - name: merchant_changed_in_v2
+        description: "此 Deal 在完整批准 cohort 出现过多个商家身份"
+        data_type: boolean
+      - name: merchant_changed_since_observation
+        description: "自前次观察是否换店，首次为 NULL"
+        data_type: boolean
+      - name: observation_context
+        description: "首次、连续或缺席重现"
+        data_type: varchar
+      - name: audit_comment_delta
+        description: "原始连续观察的有符号评论差，可跨版本"
+        data_type: bigint
+      - name: audit_vote_delta
+        description: "原始连续观察的有符号票差"
+        data_type: bigint
+      - name: audit_views_delta
+        description: "原始连续观察的有符号浏览数差"
+        data_type: bigint
+      - name: interval_eligible
+        description: "快照可比且该 Deal 连续、实测小时为正"
+        data_type: boolean
+        data_tests: [not_null]
+      - name: merchant_comparison_eligible
+        description: "可比 Deal 区间且完整 v2 样本内商家稳定"
+        data_type: boolean
+        data_tests: [not_null]
+      - name: comment_delta
+        description: "可比区间的有符号评论差，两端非空才有值"
+        data_type: bigint
+      - name: eligible_comment_hours
+        description: "与非空业务评论差对应的实测小时"
+        data_type: double
+      - name: vote_delta
+        description: "可比区间的有符号票差"
+        data_type: bigint
+      - name: views_delta
+        description: "可比区间的有符号浏览数差"
+        data_type: bigint
+      - name: eligible_vote_hours
+        description: "仅在业务票差非空时计入的实测小时；与评论时数独立。"
+        data_type: double
